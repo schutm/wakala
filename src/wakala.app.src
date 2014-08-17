@@ -1,11 +1,10 @@
-{application, demo, [
-	{description, "wakala demo - websockets to socket proxy"},
-	{vsn, "1"},
-	{registered, [demo_sup]},
-	{applications, [
-		kernel,
-        stdlib,
-        cowboy
-	]},
-	{mod, { demo_app, []}},
-]}.
+{application, wakala, [
+                       {description, "wakala websockets to socket proxy"},
+                       {vsn, "1"},
+                       {modules, []},
+                       {registered, []},
+                       {applications, [
+                                       kernel,
+                                       stdlib,
+                                       cowboy
+                                      ]}]}.

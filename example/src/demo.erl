@@ -7,4 +7,4 @@ start() ->
     ok = application:start(ranch),
     ok = application:start(cowlib),
     ok = application:start(cowboy),
-    ok = application:start(wakala).
+    ok = application:start(demo).

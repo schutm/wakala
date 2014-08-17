@@ -3,9 +3,9 @@
 
 %% Application callbacks
 -export([
-  start/2,
-  stop/1
-]).
+         start/2,
+         stop/1
+        ]).
 
 -define(ACCEPTORS, 100).
 -define(PORT, 8080).
@@ -16,22 +16,22 @@
 %% ===================================================================
 
 start(_StartType, _StartArgs) ->
-  Routes = routes(),
-  Dispatch = cowboy_router:compile(Routes),
-  Reference = ?REFERENCE,
-  Port = ?PORT,
-  Acceptors = ?ACCEPTORS,
-  TransOpts = [{port, Port}],
-  ProtoOpts = [{env, [{dispatch, Dispatch}]}],
-  {ok, _} = cowboy:start_http(
-    Reference,
-    Acceptors,
-    TransOpts,
-    ProtoOpts),
-  demo_sup:start_link().
+    Routes = routes(),
+    Dispatch = cowboy_router:compile(Routes),
+    Reference = ?REFERENCE,
+    Port = ?PORT,
+    Acceptors = ?ACCEPTORS,
+    TransOpts = [{port, Port}],
+    ProtoOpts = [{env, [{dispatch, Dispatch}]}],
+    {ok, _} = cowboy:start_http(
+                Reference,
+                Acceptors,
+                TransOpts,
+                ProtoOpts),
+    demo_sup:start_link().
 
 stop(_State) ->
-  ok.
+    ok.
 
 
 %% ===================================================================
@@ -39,11 +39,16 @@ stop(_State) ->
 %% ===================================================================
 
 routes() ->
-  [{'_', [
-%%		{"/", cowboy_static, {priv_file, handaki, "index.html"}},
-%%		{"/websocket", ws_handler, []},
-%%		{"/static/[...]", cowboy_static, {priv_dir, handaki, "static"}}
-    {"/", cowboy_static, {file, "priv/index.html"}},
-    {"/websocket", ws_handler, []},
-    {"/static/jquery.min.js", cowboy_static, {file, "priv/static/jquery.min.js"}}
-  ]}].
+    [{'_', [
+            {"/websocket", wakala_handler, []},
+            {"/[...]", cowboy_static, {dir, priv_dir(demo)}}
+           ]}].
+
+priv_dir(App) ->
+    case code:priv_dir(App) of
+        {error, bad_name} ->
+            {ok, Cwd} = file:get_cwd(),
+            filename:join(Cwd, "priv");
+        Priv ->
+            Priv
+    end.

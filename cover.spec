@@ -1,1 +1,2 @@
-{incl_app, cowboy, details}.
+{level, details}.
+{incl_dirs_r, ["ebin", "test"]}.
