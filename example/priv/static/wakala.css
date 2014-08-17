@@ -1,0 +1,32 @@
+@font-face { font-family:'Droid Sans Mono';font-style:normal;font-weight:400;src:url('../fonts/DroidSansMono.ttf') format('truetype'); }
+@font-face { font-family:'Open Sans';font-style:normal;font-weight:400;src:url('../fonts/OpenSans-Regular.ttf') format('truetype'); }
+@font-face { font-family:'Open Sans Condensed';font-style:normal;font-weight:300;src:url('../fonts/OpenSans-CondLight.ttf') format('truetype'); }
+
+html { font:.9em/1.5 'Open Sans',sans-serif;color:#aaa; }
+body { background-color:#2d2d2d;padding:0 5rem; }
+h1 { margin:0;font-family:'Open Sans Condensed',sans-serif;font-size:3rem;color:#fff; }
+input { background-color:#333;border:1px solid #222;color:#aaa; }
+input:focus { border:1px solid #aaa;outline:none; }
+textarea { font:.9em 'Droid Sans Mono'; }
+textarea:focus { outline:none; }
+button { background-color:#222;border:1px solid #aaa;color:#aaa; }
+button:hover { background-color:#aaa;color:#222; }
+
+#prerequisites { margin: 0 0 1rem 0; }
+#checkWs span { display:none; }
+#checkWs.undetermined .is-undetermined { display:initial; }
+#checkWs.enabled .is-enabled { display:initial; }
+#checkWs.disabled .is-disabled { display:initial; }
+#server { width:25rem; }
+#port{ width:3rem; }
+#messages { font:.9em 'Droid Sans Mono';position:absolute;background-color:#222;top:12rem;bottom:1rem;left:5rem;right:5rem;overflow-y:scroll; }
+#new-request { width:100%;border:none;background-color:#222;color:#fff;resize:none; }
+
+.connection { width:8rem; }
+.is-disabled { color:#a00; }
+.is-enabled { color:#080; }
+.is-undetermined { color:#a60; }
+
+::-webkit-scrollbar { width: 16px; }
+::-webkit-scrollbar-track { background-color:#444; }
+::-webkit-scrollbar-thumb { border:2px solid #444;background-color:#666; }

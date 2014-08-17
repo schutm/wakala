@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Wakala - Websocket to socket proxy</title>
+
+    <link href="static/wakala.css" rel="stylesheet">
+    <link href="static/font-awesome.min.css" rel="stylesheet">
+
+    <script src="static/jquery.min.js"></script>
+    <script src="static/jquery.autosize.min.js"></script>
+    <script src="static/wakala.js"></script>
+  </head>
+
+  <body>
+    <h1>Wakala Demo &ndash; Websocket to socket proxy</h1>
+    <div id="prerequisites">
+        <div id="checkJs">Javascript availability:
+           <script>document.write('<span class="is-enabled">available</span>');</script>
+           <noscript><span class="is-disabled">un-available</span>, please enable</noscript>
+        </div>
+        <div id="checkWs" class="undetermined">Websocket availability:
+            <span class="is-undetermined">checking</span>
+            <span class="is-enabled">available</span>
+            <span class="is-disabled">un-available</span>
+        </div>
+    </div>
+
+    <div>
+        Server address or IP: <input type="text" id="server" value="">
+        Port: <input type="text" id="port" value="">
+        <button type="button" id="connect" class="connection"><i class="fa fa-send-o"></i> Connect</button>
+        <button type="button" id="disconnect" class="connection"><i class="fa fa-send"></i> Disconnect</button>
+    </div>
+
+    <div id="messages">
+        <ul class="fa-ul">
+            <li class="input"><i class="fa-li fa fa-arrow-circle-o-right"></i><textarea id="new-request"></textarea></li>
+        </ul>
+    </div>
+
+    <div id="actions">
+    </div>
+  </body>
+</html> 
