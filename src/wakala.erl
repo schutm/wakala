@@ -30,7 +30,7 @@ new() ->
 
 %% @doc Connects to the specified {Host, Port} using Proxy.
 -spec connect(Proxy :: wakala:proxy(), {Host :: inet:ip_address() | inet:hostname(), Port :: inet:port_number()}) ->
-                     wakala:proxy().
+                     {ok, wakala:proxy()} | {error, inet:posix()}.
 connect(Proxy, {Host, Port}) ->
     case gen_tcp:connect(Host, Port, [{active, false}]) of
         {ok, Socket} -> {ok, Proxy#proxy{socket = Socket}};

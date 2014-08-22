@@ -1,0 +1,2 @@
+language: erlang
+script: "(make test-compile && make test) && (make build_plt && make dialyzer)"

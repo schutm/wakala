@@ -15,8 +15,9 @@
 %% ===================================================================
 
 %% @doc Upgrade the protocol to cowboy_websocket.
--spec init({TransportName :: tcp, ProtocolName :: http}, Req :: cowboy_req:req(), Opts :: any()) ->
-                  {upgrade, protocol, cowboy_websocket}.
+-spec init({TransportName :: tcp, ProtocolName :: http},
+           Req :: cowboy_req:req(),
+           Opts :: any()) -> {upgrade, protocol, cowboy_websocket}.
 init({tcp, http}, _Req, _Opts) ->
     {upgrade, protocol, cowboy_websocket}.
 
@@ -27,22 +28,26 @@ init({tcp, http}, _Req, _Opts) ->
 
 %% @doc Accepts the websocket and initialize a new wakala_proxy using the url's host and port query
 %%      parameters. E.g. http://localhost/websocket?host=example.com&port=80
--spec websocket_init(TransportName :: tcp, Req :: cowboy_req:req(), Opts :: any()) ->
-                            {ok, Req :: cowboy_req:req(), wakala:proxy()}.
+-spec websocket_init(TransportName :: tcp,
+                     Req :: cowboy_req:req(),
+                     Opts :: any()) -> {ok, Req :: cowboy_req:req(), wakala:proxy()}.
 websocket_init(tcp, Req, _Opts) ->
     self() ! connect,
     {ok, Req, wakala:new()}.
 
 %% @doc Handles any information send by the client.
 -spec websocket_handle(InFrame :: {text | binary | ping | pong, binary()},
-                       Req :: cowboy_req:req(), Proxy :: wakala:proxy()) ->
-                              {ok, cowboy_req:req(), wakala:proxy()}.
+                       Req :: cowboy_req:req(),
+                       Proxy :: wakala:proxy()) -> {ok, cowboy_req:req(), wakala:proxy()}.
 websocket_handle({text, Msg}, Req, Proxy) ->
     Result = wakala:send(Proxy, Msg),
     reply(Req, Result).
 
 %% @doc Handles any information send by an erlang process.
--spec websocket_info(InFrame :: cowboy_websocket:frame(), Req :: cowboy_req:req(), Proxy :: wakala:proxy()) ->
+-spec websocket_info(
+        connect | {received, Message :: string()} |  {error, Reason :: string()},
+        Req :: cowboy_req:req(),
+        Proxy :: wakala:proxy()) -> 
                             {'ok', cowboy_req:req(), wakala:proxy()} |
                             {'shutdown', cowboy_req:req(), wakala:proxy()} |
                             {'reply', cowboy_websocket:frame(), cowboy_req:req(), wakala:proxy()}.
@@ -51,13 +56,15 @@ websocket_info(connect, Req, Proxy) ->
     Result = connect_host(Proxy, RemoteHost),
     reply(Req, Result);
 websocket_info({received, Message}, Req, Proxy) ->
-    {reply, {text, Message}, Req, Proxy};
+    reply(Req, {reply, Message, Proxy});
 websocket_info({error, _Reason}, Req, Proxy) ->
-    {shutdown, Req, Proxy}.
+    reply(Req, {error, Proxy}).
+
 
 %% @doc Closes the websocket.
--spec websocket_terminate(Reason :: any(), Req :: cowboy_req:req(), Proxy :: wakala:proxy()) ->
-                                 ok.
+-spec websocket_terminate(Reason :: any(),
+                          Req :: cowboy_req:req(),
+                          Proxy :: wakala:proxy()) -> ok.
 websocket_terminate(_Reason, _Req, Proxy) ->
     {ok, _} = wakala:disconnect(Proxy),
     ok.
@@ -78,14 +85,25 @@ extract_host_and_port(Req) ->
 connect_host(Proxy, RemoteHost) ->
     Pid = self(),
     case wakala:connect(Proxy, RemoteHost) of
-        {ok, ConnectedProxy} -> {ok, wakala:callback(ConnectedProxy, fun(Message) -> Pid ! Message end)};
-        Other -> Other
+        {ok, ConnectedProxy} ->
+            {ok, wakala:callback(ConnectedProxy, fun(Message) ->
+                                                         Pid ! Message
+                                                 end)};
+        Other ->
+            Other
     end.
 
-
--spec reply(Req :: cowboy_req:req(), {ok|error, wakala:proxy()}) ->
-                   {ok, cowboy_req:req(), wakala:proxy()}|{shutdown, wakala:proxy()}.
+%% @doc Reply to the client
+-spec reply(Req :: cowboy_req:req(),
+            {ok, wakala:proxy()} |
+            {reply, string(), wakala:proxy()} |
+            {error, wakala:proxy()}) ->
+                   {ok, cowboy_req:req(), wakala:proxy()} |
+                   {reply, {text, string()}, cowboy_req:req(), wakala:proxy()} |
+                   {shutdown, cowboy_req:req(), wakala:proxy()}.
 reply(Req, {ok, Proxy}) ->
     {ok, Req, Proxy};
-reply(_Req, {error, Proxy}) ->
-    {shutdown, Proxy}.
+reply(Req, {reply, Message, Proxy}) ->
+    {reply, {text, Message}, Req, Proxy};
+reply(Req, {error, Proxy}) ->
+    {shutdown, Req, Proxy}.
