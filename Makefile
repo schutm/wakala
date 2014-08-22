@@ -14,7 +14,7 @@ deps:
 	@REBAR_EXTRA_DEPS=1 $(REBAR) get-deps
 
 clean:
-	@rm -rf ebin/ test logs erl_crash.dump
+	@rm -rf ebin/ logs erl_crash.dump $(PLT)
 
 distclean: clean
 	@rm -rf deps

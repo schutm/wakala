@@ -1,4 +1,4 @@
 language: erlang
+script: "make test-compile && make test && make build_plt && make dialyzer"
 otp_release:
    - R16B01
-script: "(make test-compile && make test) && (make build_plt && make dialyzer)"
