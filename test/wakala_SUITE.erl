@@ -15,7 +15,8 @@ groups() ->
     [{websocket_tests, [parallel], [
                                     websocket_open_failure_test,
                                     websocket_text_test,
-                                    websocket_host_closed_connection_test]}].
+                                    websocket_host_closed_connection_test
+                                   ]}].
 
 init_per_suite(Config) ->
     ok = application:start(crypto),
@@ -44,34 +45,38 @@ init_dispatch() ->
 %% Tests.
 websocket_open_failure_test(Config) ->
     Socket = get_websocket(Config, {"nosuchhost.gmail.com", 25}),
+    accept_closing_handshake(Socket),
 
-                                                % The socket should be closed
-    {error, closed} = get_response(Socket).
+    % The socket should be closed
+    {error, closed} = get_response(Socket),
+    ok.
 
 websocket_text_test(Config) ->
     Socket = get_websocket(Config, {"smtp.gmail.com", 25}),
     "220 " ++ _ = get_response(Socket),
 
-                                                % The send command should get a response.
+    % The send command should get a response.
     ok = send(Socket, text, "QUIT\r\n"),
     "221 " ++ _ = get_response(Socket),
 
-    close(Socket).
+    close(Socket),
+    ok.
 
 websocket_host_closed_connection_test(Config) ->
     Socket = get_websocket(Config, {"smtp.gmail.com", 25}),
     "220 " ++ _ = get_response(Socket),
 
-                                                % Force the host to close the connection
+    % Force the host to close the connection
     ok = send(Socket, text, "QUIT\r\n"),
     "221 " ++ _ = get_response(Socket),
     accept_closing_handshake(Socket),
 
-                                                % We should not be able to send to a closed connection
-    {error, closed} = send(Socket, text, "HELO\r\n"),
+    % We should not be able to read from a closed connection
+    {error, closed} = gen_tcp:recv(Socket, 0, 6000),
 
-                                                % We should not be able to read from a closed connection
-    {error, closed} = gen_tcp:recv(Socket, 0, 6000).
+    % We should not be able to send to a closed connection
+    {error, closed} = send(Socket, text, "HELO\r\n"),
+    ok.
 
 
 %% Internal.
@@ -121,28 +126,31 @@ accept_opening_handshake(Socket) ->
         = lists:keyfind("sec-websocket-accept", 1, Headers).
 
 accept_closing_handshake(Socket) ->
-    {ok, Data} = gen_tcp:recv(Socket, 0, 6000),
+    Opcode = opcode(close),
     Fin = 1,
-    <<Fin:1, _Reserved:3, _Opcode:4, _Mask:1, _Length:7, _Payload/binary>> = Data,
-    ok = gen_tcp:send(Socket, << 1:1, 0:3, 8:4, 1:1, 0:7, 0:32 >>). %% close
+    {ok, Data} = gen_tcp:recv(Socket, 0, 6000),
+    <<Fin:1, _Reserved:3, Opcode:4, _Mask:1, _Length:7, _Payload/binary>> = Data,
+    ok = gen_tcp:send(Socket, << 1:1, 0:3, Opcode:4, 1:1, 0:7, 0:32 >>). %% close
 
 send(Socket, MessageType, Message) ->
     Opcode = opcode(MessageType),
     FrameLength = length(Message),
     Header = <<1:1, 0:3, Opcode:4, 1:1, FrameLength:7>>,
     Mask = 16#37fa213d,
-    MaskedHello = mask(list_to_binary(Message), Mask, <<>>),
-    gen_tcp:send(Socket, [Header, <<Mask:32>>, MaskedHello]).
+    MaskedMessage = mask(list_to_binary(Message), Mask, <<>>),
+    gen_tcp:send(Socket, [Header, <<Mask:32>>, MaskedMessage]).
 
 get_response(Socket) ->
-    Response = gen_tcp:recv(Socket, 0, 6000),
-    handle_response(Response).
+    Response = gen_tcp:recv(Socket, 2, 6000),
+    handle_response(Socket, Response).
 
-handle_response({ok, Data}) ->
-    <<_Fin:1, _Reserved:3, _Opcode:4, _Mask:1, _Length:7, Payload/binary>> = Data,
+handle_response(Socket, {ok, Data}) ->
+    <<_Fin:1, _Reserved:3, Opcode:4, _Mask:1, Length:7>> = Data,
+    {ok, Payload} = gen_tcp:recv(Socket, Length, 0),
     Response = binary_to_list(Payload),
+    io:fwrite("~s: ~p~n", [Response, Opcode]),
     Response;
-handle_response(Response) ->
+handle_response(Socket, Response) ->
     Response.
 
 opcode(text) -> 1;

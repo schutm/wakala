@@ -41,9 +41,9 @@ connect(Proxy, {Host, Port}) ->
 %% @doc Disconnect the remote host of the Proxy.
 -spec disconnect(Proxy :: wakala:proxy()) -> {ok, wakala:proxy()}.
 disconnect(#proxy{socket = Socket, process = Pid} = _Proxy) ->
-    gen_tcp:close(Socket),
-    exit(Pid, ok),
-    {ok, #proxy{}}.
+    catch gen_tcp:close(Socket),
+    catch exit(Pid, ok),
+    {ok, undefined}.
 
 
 %% @doc The Callback to invoke if data is received by Proxy.

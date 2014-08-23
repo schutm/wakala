@@ -32,21 +32,15 @@ typer:
 	-@$(TYPER) --plt $(PLT) -r src
 
 # Test targets
-test-deps:
-	@REBAR_EXTRA_DEPS=1 $(REBAR) -C rebar.tests.config get-deps
-
-test-compile: test-deps
-	-@$(REBAR) -C rebar.tests.config compile
-
 test: ct
 
-ct: test-compile
+ct: compile
 	-@$(REBAR) skip_deps=true ct
 
-eunit: test-compile
+eunit: compile
 	-@$(REBAR) skip_deps=true eunit
 
-qc: test-compile
+qc: compile
 	-@$(REBAR) skip_deps=true qc
 
 # Check targets
