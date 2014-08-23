@@ -32,7 +32,10 @@ typer:
 	-@$(TYPER) --plt $(PLT) -r src
 
 # Test targets
-test-compile: deps
+test-deps:
+	@REBAR_EXTRA_DEPS=1 $(REBAR) -C rebar.tests.config get-deps
+
+test-compile: test-deps
 	-@$(REBAR) -C rebar.tests.config compile
 
 test: ct
