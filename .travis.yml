@@ -1,4 +1,4 @@
 language: erlang
-script: "make compile && make test && make build_plt && make dialyzer"
+script: "CONFIG=rebar.tests.config make test && make build_plt && make dialyzer"
 otp_release:
    - R16B01
