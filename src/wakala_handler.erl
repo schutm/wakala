@@ -66,7 +66,7 @@ websocket_info({error, _Reason}, Req, Proxy) ->
                           Req :: cowboy_req:req(),
                           Proxy :: wakala:proxy()) -> ok.
 websocket_terminate(_Reason, _Req, Proxy) ->
-    wakala:disconnect(Proxy),
+    ok = wakala:disconnect(Proxy),
     ok.
 
 
@@ -106,5 +106,5 @@ reply(Req, {ok, Proxy}) ->
 reply(Req, {reply, Message, Proxy}) ->
     {reply, {text, Message}, Req, Proxy};
 reply(Req, {error, Proxy}) ->
-    wakala:disconnect(Proxy),
+    ok = wakala:disconnect(Proxy),
     {shutdown, Req, Proxy}.
