@@ -3,6 +3,7 @@
 DIALYZER=dialyzer
 REBAR=./rebar
 TYPER=typer
+CONFIG?=rebar.config
 
 APPS = kernel stdlib erts crypto compiler hipe syntax_tools ssl \
        asn1 public_key cowboy
@@ -11,7 +12,7 @@ PLT = ./.wakala_plt
 all: deps compile
 
 deps:
-	@REBAR_EXTRA_DEPS=1 $(REBAR) get-deps
+	@REBAR_EXTRA_DEPS=1 $(REBAR) --config $(CONFIG) get-deps
 
 clean:
 	@rm -rf ebin/ logs erl_crash.dump $(PLT)
@@ -22,11 +23,11 @@ distclean: clean
 examples:
 
 compile: deps
-	-@$(REBAR) compile
+	-@$(REBAR) --config $(CONFIG) compile
 
 # Documentation targets
 docs:
-	-@$(REBAR) skip_deps=true doc
+	-@$(REBAR) --config $(CONFIG) skip_deps=true doc
 
 typer:
 	-@$(TYPER) --plt $(PLT) -r src
@@ -35,19 +36,19 @@ typer:
 test: ct
 
 ct: compile
-	-@$(REBAR) skip_deps=true ct
+	-@$(REBAR) --config $(CONFIG) skip_deps=true ct
 
 eunit: compile
-	-@$(REBAR) skip_deps=true eunit
+	-@$(REBAR) --config $(CONFIG) skip_deps=true eunit
 
 qc: compile
-	-@$(REBAR) skip_deps=true qc
+	-@$(REBAR) --config $(CONFIG) skip_deps=true qc
 
 # Check targets
 check: xref dialyzer
 
 xref:
-	@$(REBAR) skip_deps=true xref
+	@$(REBAR) --config $(CONFIG) skip_deps=true xref
 
 dialyzer: deps compile check_plt
 	-@$(DIALYZER) -pa deps/*/ebin -Wno_return -Wunmatched_returns --plt $(PLT) ebin
