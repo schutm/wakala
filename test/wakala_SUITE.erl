@@ -147,10 +147,8 @@ get_response(Socket) ->
 handle_response(Socket, {ok, Data}) ->
     <<_Fin:1, _Reserved:3, Opcode:4, _Mask:1, Length:7>> = Data,
     {ok, Payload} = gen_tcp:recv(Socket, Length, 0),
-    Response = binary_to_list(Payload),
-    io:fwrite("~s: ~p~n", [Response, Opcode]),
-    Response;
-handle_response(Socket, Response) ->
+    binary_to_list(Payload);
+handle_response(_Socket, Response) ->
     Response.
 
 opcode(text) -> 1;
