@@ -44,7 +44,7 @@ init_dispatch() ->
 
 %% Tests.
 websocket_open_failure_test(Config) ->
-    Socket = get_websocket(Config, {"nosuchhost.gmail.com", 25}),
+    Socket = get_websocket(Config, {"nosuchhost.test", 25}),
     accept_closing_handshake(Socket),
 
     % The socket should be closed
@@ -52,7 +52,7 @@ websocket_open_failure_test(Config) ->
     ok.
 
 websocket_text_test(Config) ->
-    Socket = get_websocket(Config, {"smtp.gmail.com", 25}),
+    Socket = get_websocket(Config, get_smtp_server()),
     "220 " ++ _ = get_response(Socket),
 
     % The send command should get a response.
@@ -63,7 +63,7 @@ websocket_text_test(Config) ->
     ok.
 
 websocket_host_closed_connection_test(Config) ->
-    Socket = get_websocket(Config, {"smtp.gmail.com", 25}),
+    Socket = get_websocket(Config, get_smtp_server()),
     "220 " ++ _ = get_response(Socket),
 
     % Force the host to close the connection
@@ -80,6 +80,9 @@ websocket_host_closed_connection_test(Config) ->
 
 
 %% Internal.
+get_smtp_server() ->
+    {os:getenv("IP"), list_to_integer(os:getenv("SMTP_PORT"))}.
+
 init_http(Ref, ProtoOpts, Config) ->
     {ok, _} = cowboy:start_http(Ref, 100, [{port, 0}], [
                                                         {max_keepalive, 50},

@@ -1,13 +1,24 @@
 .PHONY: test
 
+VAGRANT=$(shell which vagrant)
 DIALYZER=dialyzer
 REBAR=./rebar
 TYPER=typer
 CONFIG?=rebar.config
+ifdef TRAVIS
+  ENV=travis
+else ifneq ($(strip $(VAGRANT)),)
+  ENV=vagrant
+else
+  ENV=other
+endif
 
 APPS = kernel stdlib erts crypto compiler hipe syntax_tools ssl \
        asn1 public_key cowboy
 PLT = ./.wakala_plt
+
+show:
+	-@echo $(ENV)
 
 all: deps compile
 
@@ -33,10 +44,10 @@ typer:
 	-@$(TYPER) --plt $(PLT) -r src
 
 # Test targets
-test: ct
+test: test-setup-env ct
 
 ct: compile
-	-@$(REBAR) --config $(CONFIG) skip_deps=true ct
+	-@environments/resources/run_with_env.sh environments/$(ENV)/env $(REBAR) --config $(CONFIG) skip_deps=true ct
 
 eunit: compile
 	-@$(REBAR) --config $(CONFIG) skip_deps=true eunit
@@ -64,3 +75,7 @@ clean_plt:
 	@echo Deleting $(PLT) in 5 seconds.
 	sleep 5
 	rm $(PLT)
+
+# Internal targes
+test-setup-env:
+	cd environments/$(ENV) && ./setup.sh
