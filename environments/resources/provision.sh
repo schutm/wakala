@@ -15,7 +15,7 @@ else
     sudo /etc/init.d/postfix stop > /dev/null
 fi
 
-killall -9 smtp-sink
+killall -9 smtp-sink || true
 echo '  Starting smtp-sink on '$IP':'$SMTP_PORT
 smtp-sink -h `hostname -f` $IP:$SMTP_PORT 5000 &
 
