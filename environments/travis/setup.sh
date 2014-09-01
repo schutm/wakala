@@ -3,4 +3,4 @@
 sudo cp -Rp env /env
 sudo cp -Rp ../resources /resources
 
-/resources/provision.sh
+/resources/run_with_env.sh /env /resources/provision.sh
