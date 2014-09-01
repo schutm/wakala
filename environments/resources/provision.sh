@@ -4,6 +4,7 @@ set -e          # Exit on error
 
 echo 'Provisioning Environment'
 
+
 if which smtp-sink > /dev/null; then
     echo '  smtp-sink is already installed'
 else
@@ -16,8 +17,9 @@ else
 fi
 
 killall -9 smtp-sink || true
-echo '  Starting smtp-sink on '$IP':'$SMTP_PORT
-smtp-sink -h `hostname -f` $IP:$SMTP_PORT 5000 &
+HOSTNAME=`hostname -f`
+echo '  Starting smtp-sink on '$IP':'$SMTP_PORT' with hostname '$HOSTNAME
+smtp-sink -h $HOSTNAME -f $IP:$SMTP_PORT 5000 &
 
 
 echo 'Environment has been provisioned.'
