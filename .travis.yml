@@ -1,7 +1,7 @@
 language: erlang
 script:
    - rm -rf deps
-   - "CONFIG=rebar.tests.config make test && make build_plt && make dialyzer"
+   - "CONFIG=rebar.tests.config make test && CONFIG=rebar.tests.config make build_plt && CONFIG=rebar.tests.config make dialyzer"
 otp_release:
    - R16B01
 
