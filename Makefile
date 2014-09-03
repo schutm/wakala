@@ -65,6 +65,10 @@ check_plt: deps compile
 	$(DIALYZER) -pa deps/*/ebin --check_plt --plt $(PLT) --apps $(APPS)
 
 build_plt: compile
+	pwd
+	ls -al
+	ls -al deps/*
+	ls -al deps/*/ebin
 	$(DIALYZER) -pa deps/*/ebin --build_plt --output_plt $(PLT) --apps $(APPS)
 
 clean_plt:
