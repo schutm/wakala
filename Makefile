@@ -67,8 +67,8 @@ dialyzer: deps compile check_plt
 check_plt: deps compile
 	-@$(DIALYZER) -pa deps/*/ebin --check_plt --plt $(PLT) --apps $(APPS)
 
-build_plt: deps compile
-	-@$(DIALYZER) -pa deps/*/ebin --build_plt --output_plt $(PLT) --apps $(APPS) > /dev/null
+build_plt: compile
+	-@$(DIALYZER) -pa deps/*/ebin --build_plt --output_plt $(PLT) --apps $(APPS)
 
 clean_plt:
 	@echo "Are you sure?  It takes a long time to re-build."
