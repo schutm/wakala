@@ -59,17 +59,17 @@ xref:
 	$(REBAR) --config $(CONFIG) skip_deps=true xref
 
 dialyzer: deps compile check_plt
-	$(DIALYZER) -pa deps/*/ebin -Wno_return -Wunmatched_returns --plt $(PLT) ebin
+	$(DIALYZER) -pa deps/cowboy/ebin -Wno_return -Wunmatched_returns --plt $(PLT) ebin
 
 check_plt: deps compile
-	$(DIALYZER) -pa deps/*/ebin --check_plt --plt $(PLT) --apps $(APPS)
+	$(DIALYZER) -pa deps/cowboy/ebin --check_plt --plt $(PLT) --apps $(APPS)
 
 build_plt: compile
 	pwd
 	ls -al
 	ls -al deps/*
 	ls -al deps/*/ebin
-	$(DIALYZER) -pa deps/*/ebin --build_plt --output_plt $(PLT) --apps $(APPS)
+	$(DIALYZER) -pa deps/cowboy/ebin --build_plt --output_plt $(PLT) --apps $(APPS)
 
 clean_plt:
 	@echo "Are you sure?  It takes a long time to re-build."
