@@ -1,3 +1,5 @@
+Current buildstatus: [![Build Status](https://travis-ci.org/schutm/wakala.png)](https://travis-ci.org/schutm/wakala)
+
 wakala
 ======
 wakala is a proof of concept to investigate and show how easy it is to
