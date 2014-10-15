@@ -74,7 +74,8 @@ $(document).ready(function() {
     function addMessage(type, message) {
         $('<li></li>')
             .addClass(getClass(type))
-            .append($('<i></i>').addClass(getIconClass(type)), message)
+            .append($('<i></i>').addClass(getIconClass(type)),
+                    $('<div/>').text(message).html())
             .insertBefore('#messages .input');
     }
 
