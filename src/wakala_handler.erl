@@ -40,7 +40,7 @@ websocket_init(tcp, Req, _Opts) ->
                        Req :: cowboy_req:req(),
                        Proxy :: wakala:proxy()) -> {ok, cowboy_req:req(), wakala:proxy()}.
 websocket_handle({text, Msg}, Req, Proxy) ->
-    Result = wakala:send(Proxy, Msg),
+    Result = wakala:send(Proxy, Msg ++ "~r~n"),
     reply(Req, Result).
 
 %% @doc Handles any information send by an erlang process.

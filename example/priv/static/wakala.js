@@ -121,7 +121,7 @@ $(document).ready(function() {
                                     .val("");
         if (websocket.readyState == ReadyState.OPEN) {
             requestMessage(text);
-            websocket.send(text + "\r\n");
+            websocket.send(text);
         } else {
             errorMessage('websocket is not connected');
             connectionStateChanged();
