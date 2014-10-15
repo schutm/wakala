@@ -39,7 +39,7 @@ permits:
 Acknowledgements
 ----------------
 This proxy was easy to implement due to the excellent
-cowboy(https://github.com/ninenines/cowboy) server.
+[cowboy](https://github.com/ninenines/cowboy) server.
 
 
 Contributing
