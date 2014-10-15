@@ -117,11 +117,11 @@ $(document).ready(function() {
     }
 
     function send() {
-        var text = $("#new-request").val()
-                                    .val("");
+        var text = $("#new-request").val();
+        $("#new-request").val("");
         if (websocket.readyState == ReadyState.OPEN) {
             requestMessage(text);
-            websocket.send(text);
+            websocket.send(text + "\r\n");
         } else {
             errorMessage('websocket is not connected');
             connectionStateChanged();
