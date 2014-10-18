@@ -1,9 +1,10 @@
 wakala example
 ==============
 Using this example it is possible to connect to a raw port using a web
-browser. The move below shows how to connect to a smtp-server and send
-an email.
+browser. The screenshot below shows how to connect to a smtp-server and
+send an email.
 
+![Wakala demo screenshot](demo_screenshot.png)
 
 Installation
 ------------
@@ -11,18 +12,20 @@ Installation
 On a unix like system
 =====================
 
-'''
+```
 ./rebar get-deps compile
 ./start.sh
-'''
+```
+and point your browser to the return URL.
 
 On a windows like system
 ========================
 
-'''
+```
 rebar
 start
-'''
+```
+and point your browser to the return URL.
 
 
 Acknowledgements
