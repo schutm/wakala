@@ -6,7 +6,7 @@ wakala is a proof of concept to investigate and show how easy it is to
 create a websocket-to-socket proxy using Erlang. The websocket part can
 be used from the webserver, as shown by the example. Using some excellent
 libraries the code invovled is mostly javascript for the example code.
-The proxy itself contains of almost no code at all, nevertheless it is
+The proxy itself consist of almost no code at all, nevertheless it is
 able to handle thousands of connections and is crash proof.
 
 
