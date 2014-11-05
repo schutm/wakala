@@ -14,12 +14,14 @@ Installation
 ------------
 Add the following to your rebar.config:
 
+```
 {deps, [
     {wakala, ".*",
      {git, "https://github.com/schutm/wakala.git", {branch, "master"}}}
 ]}
+```
 
-The example can be run by executing the start scripts in the example
+The [example](example) can be run by executing the start scripts in the example
 directory.
 
 
