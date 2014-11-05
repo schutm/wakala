@@ -16,7 +16,7 @@ On a unix like system
 ./rebar get-deps compile
 ./start.sh
 ```
-and point your browser to the return URL.
+and point your browser to the returned URL.
 
 On a windows like system
 ========================
@@ -25,7 +25,7 @@ On a windows like system
 rebar
 start
 ```
-and point your browser to the return URL.
+and point your browser to the returned URL.
 
 
 Acknowledgements
@@ -36,9 +36,9 @@ This proxy was easy to implement due to the excellent
 
 Contributing
 ------------
-Anyone and everyone is welcome to [contribute](CONTRIBUTING.md).
+Anyone and everyone is welcome to [contribute](../CONTRIBUTING.md).
 
 
 License
 -------
-This software is licensed under the [ISC License](LICENSE).
+This software is licensed under the [ISC License](../LICENSE).
