@@ -1,5 +1,9 @@
 Current buildstatus: [![Build Status](https://travis-ci.org/schutm/wakala.png)](https://travis-ci.org/schutm/wakala)
 
+Canonical source
+================
+The canonical source of wakala is hosted on [gitlab.com](https://gitlab.com/schutm/wakala).
+
 wakala
 ======
 wakala is a proof of concept to investigate and show how easy it is to
